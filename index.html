@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Her2Health - Her to Health</title>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <style>
+        :root {
+            --bg-light: #f0fdfa; 
+            --text-dark: #0f766e;    
+            --text-muted: #475569;     
+            --button-tosca: #0d9488;    
+            --button-hover: #0f766e;
+            --primary-color: #00aee0;  
+            --dark-color: #1e293b;
+            --light-color: #ffffff;
+            --danger-color: #ef4444;
+            --border-radius-lg: 20px;   
+            --border-radius-sm: 8px;
+            --shadow: 0 10px 25px -5px rgba(13, 148, 136, 0.15);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
+        body { background-color: var(--bg-light); color: var(--text-dark); display: flex; flex-direction: column; min-height: 100vh; }
+        nav { background: transparent; padding: 30px 60px; display: flex; justify-content: space-between; align-items: center; z-index: 10; position: relative; }
+        nav .logo { font-size: 24px; font-weight: 700; color: var(--text-dark); letter-spacing: 0.5px; }
+        nav .nav-links { display: flex; align-items: center; gap: 30px; }
+        nav .nav-links a { color: var(--text-muted); text-decoration: none; font-weight: 500; font-size: 14px; cursor: pointer; transition: color 0.2s; }
+        nav .nav-links a:hover, nav .nav-links a.active { color: var(--text-dark); font-weight: 600; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 40px; flex: 1; display: flex; flex-direction: column; width: 100%; position: relative; }
+        .view-section { display: none; animation: fadeIn 0.5s ease-in-out forwards; flex: 1; }
+        .view-section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* ========================================================
+           HERO SPLIT & RICH UI BACKGROUND (LANDING PAGE)
+           ======================================================== */
+        #view-landing {
+            position: relative;
+            background-image: radial-gradient(rgba(13, 148, 136, 0.15) 2px, transparent 2px);
+            background-size: 40px 40px;
+            overflow: hidden;
+            border-radius: var(--border-radius-lg);
+            margin: 10px 0 40px 0;
+            padding: 0 20px;
+        }
+
+        .glow-orb-1 { position: absolute; top: -100px; left: -100px; width: 500px; height: 500px; border-radius: 50%; background: #99f6e4; filter: blur(120px); z-index: 0; opacity: 0.6; pointer-events: none; }
+        .glow-orb-2 { position: absolute; bottom: -100px; right: -100px; width: 600px; height: 600px; border-radius: 50%; background: #bae6fd; filter: blur(150px); z-index: 0; opacity: 0.7; pointer-events: none; }
+
+        .deco-shape { position: absolute; z-index: 0; opacity: 0.25; pointer-events: none; animation: floatSlow 8s ease-in-out infinite alternate; }
+        .shape-cross { top: 20%; left: 45%; width: 35px; height: 35px; background: var(--button-tosca); clip-path: polygon(35% 0, 65% 0, 65% 35%, 100% 35%, 100% 65%, 65% 65%, 65% 100%, 35% 100%, 35% 65%, 0 65%, 0 35%, 35% 35%); transform: rotate(15deg); }
+        .shape-circle { bottom: 25%; right: 40%; width: 50px; height: 50px; border: 8px solid var(--primary-color); border-radius: 50%; animation-delay: 2s; }
+        
+        @keyframes floatSlow {
+            0% { transform: translateY(0) rotate(0deg); }
+            100% { transform: translateY(-30px) rotate(15deg); }
+        }
+
+        .hero-split { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 60px; align-items: center; padding: 60px 0 80px 0; height: 100%; position: relative; z-index: 2; }
+        .hero-left { display: flex; flex-direction: column; align-items: flex-start; }
+        .hero-badge { background-color: rgba(13, 148, 136, 0.15); color: var(--text-dark); padding: 6px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; margin-bottom: 20px; border: 1px solid rgba(13, 148, 136, 0.3); letter-spacing: 0.5px; }
+        .hero-left h1 { font-size: 48px; font-weight: 800; color: var(--text-dark); line-height: 1.2; margin-bottom: 25px; letter-spacing: -0.5px; text-shadow: 0 4px 15px rgba(255,255,255,0.8); }
+        .hero-left p { font-size: 16.5px; color: var(--text-muted); line-height: 1.7; margin-bottom: 35px; max-width: 520px; text-align: justify; text-shadow: 0 2px 10px rgba(255,255,255,0.9); }
+        .btn-start { background-color: var(--button-tosca); color: white; padding: 15px 38px; border: none; border-radius: 30px; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 8px 20px rgba(13, 148, 136, 0.4); letter-spacing: 0.5px; }
+        .btn-start:hover { background-color: var(--button-hover); transform: translateY(-3px); box-shadow: 0 12px 25px rgba(13, 148, 136, 0.5); }
+        .hero-right { display: flex; justify-content: center; position: relative; z-index: 2; }
+
+        /* Feature Card View (Replaces Image Slider) */
+        .feature-cards-wrapper { display: flex; flex-direction: column; gap: 15px; width: 100%; max-width: 420px; }
+        .feature-card { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(10px); border: 1px solid rgba(13, 148, 136, 0.2); border-radius: 16px; padding: 20px; display: flex; align-items: center; gap: 18px; box-shadow: 0 10px 25px rgba(13, 148, 136, 0.1); transition: transform 0.3s; animation: slideInRight 0.8s ease-out backwards; cursor: default; }
+        .feature-card:hover { transform: translateX(-10px); background: #ffffff; }
+        .feature-card:nth-child(1) { animation-delay: 0.1s; border-left: 4px solid var(--button-tosca); }
+        .feature-card:nth-child(2) { animation-delay: 0.3s; border-left: 4px solid #f59e0b; margin-left: -20px; }
+        .feature-card:nth-child(3) { animation-delay: 0.5s; border-left: 4px solid #ef4444; margin-left: -40px; }
+        
+        .card-icon { font-size: 26px; background: var(--bg-light); width: 55px; height: 55px; display: flex; align-items: center; justify-content: center; border-radius: 14px; flex-shrink: 0; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); }
+        .card-content h4 { color: var(--text-dark); margin: 0 0 4px 0; font-size: 16px; font-weight: 700; }
+        .card-content p { color: var(--text-muted); font-size: 13.5px; line-height: 1.4; margin: 0; }
+        
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* STYLING KALKULATOR KEK */
+        .kek-container { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; padding: 30px 0; }
+        @media(max-width: 768px) { .kek-container { grid-template-columns: 1fr; } }
+        .kek-card { background: white; padding: 30px; border-radius: var(--border-radius-sm); box-shadow: var(--shadow); border: 1px solid rgba(13, 148, 136, 0.15); }
+        .kek-card h3 { margin-bottom: 20px; color: var(--text-dark); font-size: 20px; border-bottom: 2px solid #f0fdfa; padding-bottom: 10px; }
+        .info-step { display: flex; gap: 15px; margin-bottom: 15px; align-items: flex-start; }
+        .info-step span { background: var(--bg-light); color: var(--button-tosca); font-weight: bold; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; border: 1px solid rgba(13, 148, 136, 0.3); }
+        .info-step p { font-size: 14.5px; color: var(--text-muted); line-height: 1.5; margin-top: 3px; }
+
+        /* LMS WORKSPACE LAYOUT */
+        .lms-layout { display: grid; grid-template-columns: 320px 1fr; gap: 25px; padding: 20px 0; }
+        .sidebar { background: white; padding: 20px; border-radius: var(--border-radius-sm); box-shadow: var(--shadow); height: fit-content; }
+        .sidebar-item { padding: 14px 16px; border-radius: 8px; margin-bottom: 10px; cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: space-between; background: #f8fafc; border: 1px solid #e2e8f0; transition: all 0.2s; color: var(--text-dark); }
+        .sidebar-item.active { background: var(--button-tosca); color: white; font-weight: 600; border-color: var(--button-tosca); }
+        .sidebar-item.locked { opacity: 0.5; cursor: not-allowed; background: #e2e8f0; }
+        .main-content-card { background: white; padding: 30px; border-radius: var(--border-radius-sm); box-shadow: var(--shadow); margin-bottom: 25px; }
+        .preview-container { width: 100%; height: 480px; border-radius: 6px; overflow: hidden; background: #e2e8f0; margin: 20px 0; border: 1px solid #cbd5e1; }
+        .preview-container iframe, .preview-container video { width: 100%; height: 100%; border: none; }
+        .timer-alert { background: #fef3c7; border: 1px solid #fde68a; color: #92400e; padding: 15px; border-radius: 6px; margin-bottom: 20px; font-weight: 500; }
+        .timer-alert.unlocked { background: #d1fae5; border-color: #a7f3d0; color: #065f46; }
+        #time-left { font-family: monospace; background: #1e293b; color: #14b8a6; padding: 2px 8px; border-radius: 4px; font-size: 16px; }
+
+        /* FORM CONTROL & TABLES */
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 6px; font-weight: 500; font-size: 14px; }
+        .form-control { width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; }
+        .btn { padding: 10px 22px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 14px; transition: all 0.2s; display: inline-block; }
+        .btn-primary { background: var(--button-tosca); color: white; }
+        .btn-primary:hover { background: var(--button-hover); }
+        .btn-tosca { background: var(--button-tosca); color: white; }
+        .btn-tosca:hover { background: var(--button-hover); }
+        .btn-locked { background: #cbd5e1; color: #94a3b8; cursor: not-allowed; }
+        .btn-danger { background: var(--danger-color); color: white; }
+        .quiz-option { display: block; padding: 12px; border: 1px solid #ddd; border-radius: 6px; margin-bottom: 10px; cursor: pointer; }
+        .admin-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 14px; }
+        .admin-table th, .admin-table td { border: 1px solid #cbd5e1; padding: 10px; text-align: left; }
+        .admin-table th { background-color: #f1f5f9; }
+
+        footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 13px; border-top: 1px solid rgba(15, 118, 110, 0.1); margin-top: auto; width: 100%; }
+        .admin-trigger { background: none; border: none; color: var(--text-muted); cursor: pointer; text-decoration: underline; }
+
+        @media (max-width: 992px) {
+            .hero-split { grid-template-columns: 1fr; text-align: center; padding: 20px 0; }
+            .hero-left { align-items: center; }
+            .feature-cards-wrapper { align-items: center; }
+            .feature-card:nth-child(n) { margin-left: 0; }
+            .lms-layout { grid-template-columns: 1fr; }
+            nav { padding: 20px; flex-direction: column; gap: 15px; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">Her2Health</div>
+        <div class="nav-links">
+            <a id="menu-landing" class="active" onclick="showView('landing')">Beranda</a>
+            <a id="menu-kek" onclick="showView('kek')">Kalkulator KEK</a>
+            <button class="btn" style="background:#e2e8f0; display:none; padding: 4px 10px; font-size:12px; color: #0f766e;" id="logout-admin-btn" onclick="logoutAdmin()">Keluar Admin</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- LANDING PAGE VIEW -->
+        <div id="view-landing" class="view-section active">
+            <div class="glow-orb-1"></div>
+            <div class="glow-orb-2"></div>
+            <div class="deco-shape shape-cross"></div>
+            <div class="deco-shape shape-circle"></div>
+
+            <div class="hero-split">
+                <div class="hero-left">
+                    <span class="hero-badge">Her2Health</span>
+                    <h1>Her to Health</h1>
+                    <p>adalah media edukasi digital yang mengajak perempuan untuk lebih sadar akan kesehatan diri melalui informasi yang mudah dipahami dan terpercaya, dengan fokus pada SADARI (Pemeriksaan Payudara Sendiri), pencegahan KEK, dan anemia.</p>
+                    <button class="btn-start" onclick="showView('user-lms')">Mulai Sekarang</button>
+                </div>
+                <div class="hero-right">
+                    <div class="feature-cards-wrapper">
+                        <div class="feature-card">
+                            <div class="card-icon">🩺</div>
+                            <div class="card-content">
+                                <h4>Panduan SADARI</h4>
+                                <p>Deteksi dini kesehatan payudara secara mandiri langkah demi langkah.</p>
+                            </div>
+                        </div>
+                        <div class="feature-card">
+                            <div class="card-icon">⚖️</div>
+                            <div class="card-content">
+                                <h4>Kalkulator KEK</h4>
+                                <p>Pantau risiko Kekurangan Energi Kronis dengan pengukuran LILA.</p>
+                            </div>
+                        </div>
+                        <div class="feature-card">
+                            <div class="card-icon">🩸</div>
+                            <div class="card-content">
+                                <h4>Pencegahan Anemia</h4>
+                                <p>Edukasi mendalam dan pemantauan kadar Hemoglobin.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- KALKULATOR KEK VIEW (BARU) -->
+        <div id="view-kek" class="view-section">
+            <div class="about-header"><h1 style="color: var(--text-dark); font-size: 36px; margin-bottom: 10px;">Kalkulator & Panduan KEK</h1><p style="color: var(--text-muted);">Deteksi Dini Risiko Kekurangan Energi Kronis (KEK) Berdasarkan Standar Kemenkes</p></div>
+            
+            <div class="kek-container">
+                <!-- Kartu Informasi & Cara Pengukuran -->
+                <div class="kek-card">
+                    <h3>📖 Cara Pengukuran LILA yang Benar</h3>
+                    <div class="info-step">
+                        <span>1</span>
+                        <p><b>Posisi Lengan:</b> Gunakan lengan kiri bagian atas (kecuali ada kelainan pada lengan kiri, gunakan lengan kanan). Lengan dalam keadaan bebas dan tidak tertutup pakaian tebal.</p>
+                    </div>
+                    <div class="info-step">
+                        <span>2</span>
+                        <p><b>Tentukan Titik Tengah:</b> Ukur jarak antara ujung tulang bahu (akromion) dan ujung siku (olekranon) menggunakan pita meteran, lalu tandai titik tengahnya.</p>
+                    </div>
+                    <div class="info-step">
+                        <span>3</span>
+                        <p><b>Lingkarkan Pita LILA:</b> Lingkarkan pita LILA pada titik tengah lengan yang sudah ditandai dengan pas (tidak terlalu ketat dan tidak terlalu longgar).</p>
+                    </div>
+                    <div class="info-step">
+                        <span>4</span>
+                        <p><b>Standar Ambang Batas:</b> Batas normal Lingkar Lengan Atas (LILA) wanita usia subur/ibu hamil adalah 23.5 cm. Jika kurang dari 23.5 cm, dikategorikan Berisiko KEK.</p>
+                    </div>
+                </div>
+
+                <!-- Kartu Kalkulator Interaktif -->
+                <div class="kek-card">
+                    <h3>🧮 Hitung Risiko KEK Anda</h3>
+                    <form onsubmit="hitungKek(event)">
+                        <div class="form-group">
+                            <label>Nama Responden / Ibu :</label>
+                            <input type="text" id="kek-nama" class="form-control" placeholder="Masukkan nama..." required>
+                        </div>
+                        <div class="form-group">
+                            <label>Hasil Pengukuran LILA (cm) :</label>
+                            <input type="number" step="0.1" id="kek-lila" class="form-control" placeholder="Contoh: 22.4" required>
+                        </div>
+                        <button type="submit" class="btn btn-tosca" style="width: 100%; margin-top: 10px; padding: 12px;">Cek Status Risiko KEK</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div id="view-user-lms" class="view-section">
+            <div class="lms-layout">
+                <div class="sidebar">
+                    <h4 style="margin-bottom: 15px; color: var(--text-dark);">Daftar Menu</h4>
+                    <div id="user-sidebar-list"></div>
+                </div>
+                <div class="main-content-card" id="user-main-content"></div>
+            </div>
+        </div>
+
+        <div id="view-admin" class="view-section">
+            <div class="main-content-card">
+                <h3 style="margin-bottom: 20px; color: var(--text-dark);">Manajemen Modul & Urutan Materi</h3>
+                <form onsubmit="adminSaveData(event)" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; align-items: end;">
+                    <div class="form-group"><label>Judul Modul</label><input type="text" id="adm-title" class="form-control" required></div>
+                    <div class="form-group"><label>Jenis Konten</label><select id="adm-type" class="form-control"><option value="pdf">File Dokumen PDF</option><option value="video">Video (Google Drive Embed)</option></select></div>
+                    <div class="form-group"><label>Link Embed URL</label><input type="url" id="adm-url" class="form-control" required></div>
+                    <div class="form-group"><label>Lock Timer (Menit)</label><input type="number" id="adm-duration" class="form-control" value="0.2" min="0.1" step="0.1"></div>
+                    <div class="form-group"><button type="submit" class="btn btn-primary" style="width: 100%;">Tambah Materi</button></div>
+                </form>
+                <table class="admin-table">
+                    <thead><tr><th>No</th><th>Judul Modul</th><th>Jenis</th><th>Durasi</th><th>Aksi</th></tr></thead>
+                    <tbody id="adm-list-preview"></tbody>
+                </table>
+            </div>
+            <div class="main-content-card">
+                <h3 style="color: var(--text-dark); margin-bottom: 15px;">Pengaturan Kuesioner (Pilihan Ganda + Kunci)</h3>
+                <form onsubmit="adminSaveQuestion(event)" style="display: grid; grid-template-columns: 2fr 1fr 1fr auto; gap: 15px; align-items: end; margin-bottom: 15px;">
+                    <div class="form-group"><label>Pertanyaan Kuis</label><input type="text" id="adm-q-text" class="form-control" required></div>
+                    <div class="form-group"><label>Pilihan (Pisahkan koma)</label><input type="text" id="adm-q-opts" class="form-control" required></div>
+                    <div class="form-group"><label>Kunci Jawaban</label><input type="text" id="adm-q-key" class="form-control" required></div>
+                    <div class="form-group"><button type="submit" class="btn btn-primary">Tambah Soal</button></div>
+                </form>
+                <div id="adm-questions-preview"></div>
+            </div>
+            <div class="main-content-card">
+                <h3 style="color: var(--text-dark); margin-bottom: 10px;">📊 Hasil Rekapitulasi Karakteristik & Koreksi Jawaban User</h3>
+                <div style="overflow-x: auto;">
+                    <table class="admin-table">
+                        <thead><tr><th>No</th><th>Nama Responden</th><th>Usia</th><th>Paritas</th><th>Tgl Melahirkan</th><th>Nifas Hari Ke</th><th>Nilai Pre-Test</th><th>Nilai Post-Test</th><th>Aksi</th></tr></thead>
+                        <tbody id="adm-recap-table-body"><tr><td colspan="9" style="text-align:center; color:var(--text-muted);">Belum ada data.</td></tr></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div> 
+
+    <footer>
+        <p>© 2026 HER2HEALTH. All Rights Reserved.</p>
+        <p style="margin-top: 15px;">Akses Manajemen: <button class="admin-trigger" onclick="promptAdminAccess()">Login Superadmin</button></p>
+    </footer>
+
+    <script>
+        const firebaseConfig = {
+                apiKey: "AIzaSyCHYwDWc1wPZYXeg4vh2WrEckeA6TlvGL0",
+                authDomain: "her2health.firebaseapp.com",
+                projectId: "her2health",
+                storageBucket: "her2health.firebasestorage.app",
+                messagingSenderId: "386093288151",
+                appId: "1:386093288151:web:00b08d23c5ba1d8f36be92",
+                measurementId: "G-630GQ6SSV5"
+        };
+        
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        let materiDatabase = [];
+        let kuesionerDatabase = [];
+        let rekapRespondenDatabase = [];
+        
+        let currentActiveMenuIndex = 0; 
+        let materiClearedStatus = []; 
+        let countdownInterval = null;
+        let currentSecondsLeft = 0;
+        let isAdminAuthenticated = false;
+        
+        let userBioSubmitted = false;
+        let preTestDone = false;
+        let preTestResults = '';
+        let currentBioData = { name: '', age: '', parity: '', deliveryDate: '', postpartumDay: '' };
+
+        function showWarningAlert(msg) { Swal.fire({ icon: 'warning', title: 'Perhatian!', text: msg, confirmButtonColor: '#0d9488' }); }
+        function showErrorAlert(msg) { Swal.fire({ icon: 'error', title: 'Akses Terkunci!', text: msg, confirmButtonColor: '#0d9488' }); }
+
+        // Fungsi Kalkulator KEK Menggunakan Standar LILA Kemenkes
+        function hitungKek(e) {
+            e.preventDefault();
+            let nama = document.getElementById('kek-nama').value;
+            let lila = parseFloat(document.getElementById('kek-lila').value);
+
+            if (isNaN(lila) || lila <= 0) {
+                showWarningAlert("Masukkan angka LILA yang valid!");
+                return;
+            }
+
+            if (lila < 23.5) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Hasil: Berisiko KEK (Kurang)',
+                    html: `Halo <b>${nama}</b>,<br>Nilai LILA Anda adalah <b>${lila} cm</b>.<br><br><span style="color: #ef4444; font-weight: bold;">Hasil menunjukkan < 23.5 cm (Berisiko KEK).</span><br>Disarankan untuk meningkatkan konsumsi makanan bergizi seimbang dan berkonsultasi dengan tenaga kesehatan terdekat.`,
+                    confirmButtonColor: '#0d9488'
+                });
+            } else {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Hasil: Normal (Tidak Berisiko KEK)',
+                    html: `Halo <b>${nama}</b>,<br>Nilai LILA Anda adalah <b>${lila} cm</b>.<br><br><span style="color: #0d9488; font-weight: bold;">Hasil menunjukkan ≥ 23.5 cm (Normal).</span><br>Pertahankan pola makan dan status gizi Anda dengan baik!`,
+                    confirmButtonColor: '#0d9488'
+                });
+            }
+        }
+
+        db.ref('materi').on('value', (snapshot) => {
+            materiDatabase = [];
+            snapshot.forEach((child) => {
+                let data = child.val(); data.firebaseKey = child.key;
+                materiDatabase.push(data);
+            });
+            if(document.getElementById('view-user-lms').classList.contains('active')) renderUserSidebarMenu();
+            renderAdminListTable();
+        });
+
+        db.ref('kuesioner').on('value', (snapshot) => {
+            kuesionerDatabase = [];
+            snapshot.forEach((child) => {
+                let data = child.val(); data.firebaseKey = child.key;
+                kuesionerDatabase.push(data);
+            });
+            renderAdminQuestions();
+        });
+
+        db.ref('rekapitulasi').on('value', (snapshot) => {
+            rekapRespondenDatabase = [];
+            snapshot.forEach((child) => {
+                let data = child.val(); data.firebaseKey = child.key;
+                rekapRespondenDatabase.push(data);
+            });
+            renderAdminRecapTable();
+        });
+
+        function showView(viewId) {
+            document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+            if(viewId === 'landing') {
+                document.getElementById('view-landing').classList.add('active');
+                document.getElementById('menu-landing').classList.add('active');
+            } else if(viewId === 'kek') {
+                document.getElementById('view-kek').classList.add('active');
+                document.getElementById('menu-kek').classList.add('active');
+            } else if(viewId === 'user-lms') {
+                document.getElementById('view-user-lms').classList.add('active');
+                init();
+            } else if(viewId === 'admin') {
+                if(!isAdminAuthenticated) { 
+                    Swal.fire({ icon: 'error', title: 'Oops...', text: 'Akses ditolak!', confirmButtonColor: '#0d9488' }); 
+                    showView('landing'); 
+                    return; 
+                }
+                document.getElementById('view-admin').classList.add('active');
+                renderAdminListTable(); renderAdminQuestions(); renderAdminRecapTable();
+            }
+        }
+
+        async function promptAdminAccess() {
+            const { value: password } = await Swal.fire({
+                title: 'Akses Superadmin',
+                input: 'password',
+                inputLabel: 'Masukkan Password Admin',
+                inputPlaceholder: 'Password',
+                showCancelButton: true,
+                confirmButtonColor: '#0d9488',
+                cancelButtonColor: '#64748b'
+            });
+
+            if (password) {
+                if(password === "her2health123") {
+                    isAdminAuthenticated = true;
+                    document.getElementById('logout-admin-btn').style.display = 'inline-block';
+                    showView('admin');
+                } else { 
+                    Swal.fire({ icon: 'error', title: 'Gagal', text: 'Sandi Salah!', confirmButtonColor: '#0d9488' }); 
+                }
+            }
+        }
+
+        function logoutAdmin() { 
+            isAdminAuthenticated = false; 
+            document.getElementById('logout-admin-btn').style.display = 'none'; 
+            showView('landing'); 
+            Swal.fire({ icon: 'success', title: 'Berhasil Keluar', text: 'Sesi admin telah diakhiri.', confirmButtonColor: '#0d9488', timer: 1500 });
+        }
+        
+        function renderUserSidebarMenu() {
+            const container = document.getElementById('user-sidebar-list'); container.innerHTML = '';
+            
+            let step1Status = preTestDone ? '✅' : (userBioSubmitted ? '📝' : '✍️');
+            let step1Active = (!preTestDone) ? 'active' : '';
+            container.innerHTML += `<div class="sidebar-item ${step1Active}"><span><b>1. Biodata & Pre-Test</b></span><span>${step1Status}</span></div>`;
+
+            materiDatabase.forEach((mod, idx) => {
+                let isCleared = materiClearedStatus[idx] ? '✅' : '📖';
+                let activeClass = (preTestDone && idx === currentActiveMenuIndex) ? 'active' : '';
+                let isUnlocked = preTestDone && (idx === 0 || materiClearedStatus[idx - 1] === true);
+                let lockedStyle = isUnlocked ? '' : 'locked';
+                
+                container.innerHTML += `<div class="sidebar-item ${activeClass} ${lockedStyle}" onclick="${isUnlocked ? `userNavigateTo(${idx})` : `showWarningAlert('Selesaikan materi sebelumnya dan tunggu timer habis terlebih dahulu!')`}"><span>${mod.title}</span><span>${isCleared}</span></div>`;
+            });
+
+            let allMateriRead = materiDatabase.length > 0 && materiClearedStatus.filter(v => v === true).length === materiDatabase.length;
+            let postTestIdx = materiDatabase.length;
+            let activeClassQuiz = (preTestDone && currentActiveMenuIndex === postTestIdx) ? 'active' : '';
+            let lockedQuiz = (allMateriRead) ? '' : 'locked';
+            
+            container.innerHTML += `<div class="sidebar-item ${activeClassQuiz} ${lockedQuiz}" onclick="${allMateriRead ? `userNavigateTo(${postTestIdx})` : `showErrorAlert('Selesaikan membaca seluruh materi terlebih dahulu.')`}"><span><b>3. Post-Test Akhir</b></span><span>${allMateriRead ? '📝' : '🔒'}</span></div>`;
+        }
+
+        function userNavigateTo(targetIdx) {
+            if (!preTestDone) {
+                showWarningAlert("Selesaikan Biodata dan Pre-Test terlebih dahulu!");
+                return;
+            }
+            if (targetIdx < materiDatabase.length) {
+                if (targetIdx > 0 && !materiClearedStatus[targetIdx - 1]) {
+                    showWarningAlert("Harap selesaikan materi sebelumnya dan tunggu timer habis!");
+                    return;
+                }
+            }
+            if (targetIdx === materiDatabase.length) {
+                let allMateriRead = materiDatabase.length > 0 && materiClearedStatus.filter(v => v === true).length === materiDatabase.length;
+                if (!allMateriRead) { showErrorAlert("Selesaikan membaca seluruh materi terlebih dahulu."); return; }
+            }
+            currentActiveMenuIndex = targetIdx; 
+            renderUserSidebarMenu(); 
+            loadActiveMenuContent();
+        }
+
+        function formatMinutesAndSeconds(totalSeconds) {
+            return String(Math.floor(totalSeconds / 60)).padStart(2, '0') + ':' + String(totalSeconds % 60).padStart(2, '0');
+        }
+
+        function generateQuizHTML(prefix) {
+            let html = '';
+            kuesionerDatabase.forEach((q, idx) => {
+                let oHtml = ''; q.options.forEach(o => { oHtml += `<label class="quiz-option"><input type="radio" name="${prefix}-ans-${q.id}" value="${o}" required> ${o}</label>`; });
+                html += `<div style="margin-bottom:20px; border-bottom:1px solid #e2e8f0; padding-bottom:10px;"><p style="font-weight:600; margin-bottom:8px;">${idx+1}. ${q.question}</p>${oHtml}</div>`;
+            });
+            return html;
+        }
+
+        function loadActiveMenuContent() {
+            if(countdownInterval) clearInterval(countdownInterval);
+            const displayCard = document.getElementById('user-main-content');
+            if(!displayCard) return;
+
+            if (!userBioSubmitted) {
+                displayCard.innerHTML = `
+                    <h2 style="margin-bottom:15px; font-size:20px;">Tahap 1: Formulir Identitas Ibu Nifas</h2>
+                    <form onsubmit="submitBioResponden(event)">
+                        <div class="form-group"><label>Nama Lengkap :</label><input type="text" id="b-name" class="form-control" required></div>
+                        <div class="form-group"><label>Usia (Tahun) :</label><input type="number" id="b-age" class="form-control" style="width:120px;" required></div>
+                        <div class="form-group"><label>Paritas (Jumlah Persalinan) :</label><input type="text" id="b-parity" placeholder="Misal: P1A0" class="form-control" required></div>
+                        <div class="form-group"><label>Tanggal Melahirkan :</label><input type="date" id="b-date" class="form-control" required></div>
+                        <div class="form-group"><label>Nifas Hari Ke :</label><input type="number" id="b-day" class="form-control" style="width:120px;" required></div>
+                        <button type="submit" class="btn btn-tosca" style="margin-top:15px;">Lanjut ke Pre-Test</button>
+                    </form>`;
+                return;
+            }
+
+            if (userBioSubmitted && !preTestDone) {
+                let qHtml = generateQuizHTML('pre');
+                displayCard.innerHTML = `<h2>Tahap 2: Lembar Pre-Test</h2><p style="font-size:12px; margin-bottom:15px; color:var(--text-muted)">Responden: <b>${currentBioData.name}</b></p><form onsubmit="submitPreTest(event)">${qHtml}<button type="submit" class="btn btn-tosca">Kirim Pre-Test & Buka Materi</button></form>`;
+                return;
+            }
+
+            if (currentActiveMenuIndex < materiDatabase.length) {
+                let activeMod = materiDatabase[currentActiveMenuIndex];
+                let alreadyCleared = materiClearedStatus[currentActiveMenuIndex] === true;
+                currentSecondsLeft = Math.round(activeMod.duration * 60);
+                
+                displayCard.innerHTML = `
+                    <h2 style="margin-bottom:15px; font-size:20px;">${activeMod.title}</h2>
+                    <div class="timer-alert ${alreadyCleared ? 'unlocked' : ''}" id="timer-banner">
+                        ${alreadyCleared ? '✅ Terverifikasi selesai.' : '⏱️ Batas waktu membaca: <span id="time-left">' + formatMinutesAndSeconds(currentSecondsLeft) + '</span>'}
+                    </div>
+                    <div class="preview-container"><iframe src="${activeMod.url}" allow="autoplay"></iframe></div>
+                    <div style="text-align:right;"><button id="btn-materi-next" class="btn ${alreadyCleared ? 'btn-tosca' : 'btn-locked'}" ${alreadyCleared ? '' : 'disabled'} onclick="goToNextMateriAlur()">Lanjutkan →</button></div>`;
+                
+                if(!alreadyCleared) {
+                    countdownInterval = setInterval(() => {
+                        currentSecondsLeft--;
+                        const timeLeftSpan = document.getElementById('time-left');
+                        if(timeLeftSpan) timeLeftSpan.innerText = formatMinutesAndSeconds(currentSecondsLeft);
+                        if(currentSecondsLeft <= 0) {
+                            clearInterval(countdownInterval); materiClearedStatus[currentActiveMenuIndex] = true; renderUserSidebarMenu();
+                            if(document.getElementById('timer-banner')) { document.getElementById('timer-banner').className = "timer-alert unlocked"; document.getElementById('timer-banner').innerText = "✅ Selesai! Akses terbuka."; }
+                            if(document.getElementById('btn-materi-next')) { document.getElementById('btn-materi-next').className = "btn btn-tosca"; document.getElementById('btn-materi-next').disabled = false; }
+                        }
+                    }, 1000);
+                }
+            } else {
+                let qHtml = generateQuizHTML('post');
+                displayCard.innerHTML = `<h2>Tahap Akhir: Lembar Post-Test</h2><p style="font-size:12px; margin-bottom:15px; color:var(--text-muted)">Responden: <b>${currentBioData.name}</b></p><form onsubmit="submitPostTest(event)">${qHtml}<button type="submit" class="btn btn-tosca">Kirim Hasil Akhir</button></form>`;
+            }
+        }
+
+        function goToNextMateriAlur() { if (currentActiveMenuIndex < materiDatabase.length) userNavigateTo(currentActiveMenuIndex + 1); }
+        function submitBioResponden(e) { 
+            e.preventDefault(); 
+            currentBioData.name = document.getElementById('b-name').value; 
+            currentBioData.age = document.getElementById('b-age').value; 
+            currentBioData.parity = document.getElementById('b-parity').value; 
+            currentBioData.deliveryDate = document.getElementById('b-date').value; 
+            currentBioData.postpartumDay = document.getElementById('b-day').value; 
+            userBioSubmitted = true; 
+            loadActiveMenuContent(); 
+            renderUserSidebarMenu(); 
+        }
+        
+        function calculateScore(prefix) {
+            let ans = [];
+            let correctCount = 0;
+            kuesionerDatabase.forEach((q, i) => { 
+                let s = document.querySelector(`input[name="${prefix}-ans-${q.id}"]:checked`).value; 
+                let isCorrect = s.trim().toLowerCase() === q.key.trim().toLowerCase();
+                if(isCorrect) correctCount++;
+                ans.push(`S${i+1}: ${s} (${isCorrect ? '✅' : '❌'})`); 
+            });
+            let totalQuestions = kuesionerDatabase.length;
+            let score = totalQuestions > 0 ? Math.round((correctCount / totalQuestions) * 100) : 0;
+            
+            return { detail: ans.join(' | '), score: score, correct: correctCount, total: totalQuestions };
+        }
+
+        function submitPreTest(e) {
+            e.preventDefault();
+            let result = calculateScore('pre');
+            preTestResults = result.detail;
+            
+            window.tempPreScore = result.score;
+            window.tempPreDetail = result.detail;
+            
+            Swal.fire({
+                title: 'Pre-Test Selesai!',
+                html: `Kamu menjawab benar <b>${result.correct}</b> dari <b>${result.total}</b> soal.<br>Nilai Pre-Test Kamu: <b>${result.score}</b>`,
+                icon: 'info',
+                confirmButtonColor: '#0d9488',
+                confirmButtonText: 'Lanjut ke Materi Pembelajaran'
+            }).then(() => {
+                preTestDone = true;
+                currentActiveMenuIndex = 0;
+                renderUserSidebarMenu();
+                loadActiveMenuContent();
+            });
+        }
+
+        function submitPostTest(e) {
+            e.preventDefault(); 
+            let result = calculateScore('post');
+            
+            db.ref('rekapitulasi').push({
+                bio: { ...currentBioData },
+                preTest: window.tempPreDetail || '-',
+                preScore: window.tempPreScore || 0,
+                postTest: result.detail,
+                postScore: result.score
+            });
+            
+            Swal.fire({
+                title: 'Tahap Akhir Selesai!',
+                html: `Kamu menjawab benar <b>${result.correct}</b> dari <b>${result.total}</b> soal.<br>Nilai Post-Test Kamu: <b>${result.score}</b><br><br><i>Data telah berhasil disimpan ke sistem. Terima kasih!</i>`,
+                icon: 'success',
+                confirmButtonColor: '#0d9488',
+                confirmButtonText: 'Selesai & Kembali ke Beranda'
+            }).then(() => {
+                userBioSubmitted = false; preTestDone = false; preTestResults = ''; 
+                window.tempPreScore = null; window.tempPreDetail = null;
+                materiClearedStatus = []; currentActiveMenuIndex = 0; showView('landing');
+            });
+        }
+
+        function adminSaveData(e) { 
+            e.preventDefault(); 
+            db.ref('materi').push({
+                id: Date.now(), title: document.getElementById('adm-title').value, type: document.getElementById('adm-type').value,
+                url: document.getElementById('adm-url').value, duration: parseFloat(document.getElementById('adm-duration').value) || 1
+            });
+            document.getElementById('adm-title').value = ''; document.getElementById('adm-url').value = ''; 
+            Swal.fire({ icon: 'success', title: 'Berhasil!', text: 'Materi berhasil disimpan permanen di Cloud!', confirmButtonColor: '#0d9488' });
+        }
+
+        function adminSaveQuestion(e) { 
+            e.preventDefault(); 
+            db.ref('kuesioner').push({
+                id: Date.now(), question: document.getElementById('adm-q-text').value,
+                options: document.getElementById('adm-q-opts').value.split(',').map(o=>o.trim()), key: document.getElementById('adm-q-key').value.trim()
+            });
+            document.getElementById('adm-q-text').value = ''; document.getElementById('adm-q-opts').value = ''; document.getElementById('adm-q-key').value = ''; 
+            Swal.fire({ icon: 'success', title: 'Berhasil!', text: 'Pertanyaan berhasil disimpan permanen di Cloud!', confirmButtonColor: '#0d9488' });
+        }
+
+        function deleteMateri(idx) { 
+            let key = materiDatabase[idx].firebaseKey; 
+            Swal.fire({
+                title: 'Hapus materi ini?',
+                text: "Data akan dihapus permanen dari cloud!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#64748b',
+                confirmButtonText: 'Ya, hapus!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    db.ref('materi/' + key).remove();
+                    Swal.fire({ icon: 'success', title: 'Terhapus!', text: 'Materi telah dihapus.', confirmButtonColor: '#0d9488', timer: 1500 });
+                }
+            });
+        }
+        
+        function deleteQuestion(idx) { 
+            let key = kuesionerDatabase[idx].firebaseKey; 
+            Swal.fire({
+                title: 'Hapus pertanyaan ini?',
+                text: "Data akan dihapus permanen dari cloud!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#64748b',
+                confirmButtonText: 'Ya, hapus!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    db.ref('kuesioner/' + key).remove();
+                    Swal.fire({ icon: 'success', title: 'Terhapus!', text: 'Pertanyaan telah dihapus.', confirmButtonColor: '#0d9488', timer: 1500 });
+                }
+            });
+        }
+        
+        function deleteResponden(idx) { 
+            let key = rekapRespondenDatabase[idx].firebaseKey; 
+            Swal.fire({
+                title: 'Hapus data responden ini?',
+                text: "Data rekapitulasi akan hilang selamanya!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#64748b',
+                confirmButtonText: 'Ya, hapus!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    db.ref('rekapitulasi/' + key).remove();
+                    Swal.fire({ icon: 'success', title: 'Terhapus!', text: 'Data responden telah dihapus.', confirmButtonColor: '#0d9488', timer: 1500 });
+                }
+            });
+        }
+
+        function renderAdminListTable() {
+            const tb = document.getElementById('adm-list-preview'); if(!tb) return; tb.innerHTML = '';
+            materiDatabase.forEach((m, i) => { tb.innerHTML += `<tr><td>${i+1}</td><td><b>${m.title}</b></td><td>${m.type.toUpperCase()}</td><td>${m.duration} Menit</td><td><button class="btn btn-danger" style="padding:4px 8px; font-size:12px;" onclick="deleteMateri(${i})">Hapus</button></td></tr>`; });
+        }
+        function renderAdminQuestions() {
+            const ar = document.getElementById('adm-questions-preview'); if(!ar) return; ar.innerHTML = '';
+            kuesionerDatabase.forEach((q, i) => { ar.innerHTML += `<div style="padding:10px; background:#f8fafc; border:1px solid #e2e8f0; margin-bottom:8px; border-radius:6px; display:flex; justify-content:space-between; align-items:center;"><div><b>${i+1}. ${q.question}</b><br><small>Opsi: ${q.options.join(', ')}</small><br><small style="color:var(--primary-color); font-weight:600;">🔑 Kunci: ${q.key}</small></div><button class="btn btn-danger" style="padding:4px 8px; font-size:12px;" onclick="deleteQuestion(${i})">Hapus</button></div>`; });
+        }
+        function renderAdminRecapTable() {
+            const tb = document.getElementById('adm-recap-table-body'); if(!tb) return; tb.innerHTML = '';
+            if(rekapRespondenDatabase.length===0) { tb.innerHTML = `<tr><td colspan="9" style="text-align:center; color:var(--text-muted);">Belum ada data responden terkumpul.</td></tr>`; return; }
+            rekapRespondenDatabase.forEach((d, i) => { 
+                let preVal = d.preScore !== undefined ? `<b>Skor: ${d.preScore}</b><br><span style="font-size:11px; color:#666;">${d.preTest}</span>` : (d.preTest || '-');
+                let postVal = d.postScore !== undefined ? `<b>Skor: ${d.postScore}</b><br><span style="font-size:11px; color:#666;">${d.postTest}</span>` : (d.postTest || '-');
+                tb.innerHTML += `<tr><td>${i+1}</td><td><b>${d.bio.name}</b></td><td>${d.bio.age} Thn</td><td>${d.bio.parity}</td><td>${d.bio.deliveryDate}</td><td>Hari ${d.bio.postpartumDay}</td><td style="font-size:12px;">${preVal}</td><td style="font-size:12px;">${postVal}</td><td><button class="btn btn-danger" style="padding:4px 8px; font-size:12px;" onclick="deleteResponden(${i})">Hapus</button></td></tr>`; 
+            });
+        }
+        
+        function init() { renderUserSidebarMenu(); loadActiveMenuContent(); }
+
+        // BROWSER PROTECTIONS
+        document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && (e.key === 'c' || e.key === 'x' || e.key === 'u' || e.key === 's')) { e.preventDefault(); return false; }
+            if (e.key === 'F12') { e.preventDefault(); return false; }
+        });
+        const styleSel = document.createElement('style'); styleSel.innerHTML = `body { -webkit-user-select: none; user-select: none; } input { user-select: text; }`; document.head.appendChild(styleSel);
+    </script>
+</body>
+</html>
