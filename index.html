@@ -290,18 +290,19 @@
 
     <script>
                const firebaseConfig = {
-    apiKey: "AIzaSyCHYwDWc1wPZYXeg4vh2WrEckeA6TlvGL0",
-    authDomain: "her2health.firebaseapp.com",
-    databaseURL: "https://her2health-default-rtdb.firebaseio.com", // <--- Ganti dengan baris ini
-    projectId: "her2health",
-    storageBucket: "her2health.firebasestorage.app",
-    messagingSenderId: "386093288151",
-    appId: "1:386093288151:web:00b08d23c5ba1d8f36be92",
-    measurementId: "G-630GQ6SSV5"
+  apiKey: "AIzaSyCHYwDWc1wPZYXeg4vh2WrEckeA6TlvGL0",
+  authDomain: "her2health.firebaseapp.com",
+  databaseURL: "https://her2health-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "her2health",
+  storageBucket: "her2health.firebasestorage.app",
+  messagingSenderId: "386093288151",
+  appId: "1:386093288151:web:00b08d23c5ba1d8f36be92",
+  measurementId: "G-630GQ6SSV5"
 };
-        
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
 
         let materiDatabase = [];
         let kuesionerDatabase = [];
