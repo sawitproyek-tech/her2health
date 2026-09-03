@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <!-- Background melengkung warna Tosca Her2Health -->
+  <rect width="256" height="256" rx="50" fill="#0d9488"/>
+  
+  <!-- Ikon Hati warna Putih -->
+  <path d="M128,212S32,156,32,92A52,52,0,0,1,128,56,52,52,0,0,1,224,92C224,156,128,212,128,212Z" fill="#ffffff"/>
+  
+  <!-- Teks H2 di tengah Hati -->
+  <text x="128" y="145" font-family="'Segoe UI', system-ui, sans-serif" font-size="76" font-weight="900" fill="#0d9488" text-anchor="middle">H2</text>
+</svg>
