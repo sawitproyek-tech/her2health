@@ -36,9 +36,7 @@
         .view-section.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* ========================================================
-           HERO SPLIT & RICH UI BACKGROUND (LANDING PAGE)
-           ======================================================== */
+        /* HERO SPLIT & RICH UI BACKGROUND */
         #view-landing {
             position: relative;
             background-image: radial-gradient(rgba(13, 148, 136, 0.15) 2px, transparent 2px);
@@ -70,31 +68,19 @@
         .btn-start:hover { background-color: var(--button-hover); transform: translateY(-3px); box-shadow: 0 12px 25px rgba(13, 148, 136, 0.5); }
         .hero-right { display: flex; justify-content: center; position: relative; z-index: 2; }
 
-        /* Feature Card View (Replaces Image Slider) */
-        .feature-cards-wrapper { display: flex; flex-direction: column; gap: 15px; width: 100%; max-width: 420px; }
-        .feature-card { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(10px); border: 1px solid rgba(13, 148, 136, 0.2); border-radius: 16px; padding: 20px; display: flex; align-items: center; gap: 18px; box-shadow: 0 10px 25px rgba(13, 148, 136, 0.1); transition: transform 0.3s; animation: slideInRight 0.8s ease-out backwards; cursor: default; }
+        /* Feature Card View */
+        .feature-cards-wrapper { display: flex; flex-direction: column; gap: 15px; width: 100%; max-width: 460px; }
+        .feature-card { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(10px); border: 1px solid rgba(13, 148, 136, 0.2); border-radius: 16px; padding: 35px 25px; display: flex; align-items: flex-start; gap: 20px; box-shadow: 0 10px 25px rgba(13, 148, 136, 0.1); transition: transform 0.3s; animation: slideInRight 0.8s ease-out backwards; cursor: default; border-left: 6px solid var(--button-tosca); }
         .feature-card:hover { transform: translateX(-10px); background: #ffffff; }
-        .feature-card:nth-child(1) { animation-delay: 0.1s; border-left: 4px solid var(--button-tosca); }
-        .feature-card:nth-child(2) { animation-delay: 0.3s; border-left: 4px solid #f59e0b; margin-left: -20px; }
-        .feature-card:nth-child(3) { animation-delay: 0.5s; border-left: 4px solid #ef4444; margin-left: -40px; }
         
-        .card-icon { font-size: 26px; background: var(--bg-light); width: 55px; height: 55px; display: flex; align-items: center; justify-content: center; border-radius: 14px; flex-shrink: 0; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); }
-        .card-content h4 { color: var(--text-dark); margin: 0 0 4px 0; font-size: 16px; font-weight: 700; }
-        .card-content p { color: var(--text-muted); font-size: 13.5px; line-height: 1.4; margin: 0; }
+        .card-icon { font-size: 34px; background: var(--bg-light); width: 75px; height: 75px; display: flex; align-items: center; justify-content: center; border-radius: 16px; flex-shrink: 0; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); }
+        .card-content h4 { color: var(--text-dark); margin: 0 0 12px 0; font-size: 19px; font-weight: 700; line-height: 1.3;}
+        .card-content p { color: var(--text-muted); font-size: 14.5px; line-height: 1.6; margin: 0; text-align: justify; }
         
         @keyframes slideInRight {
             from { opacity: 0; transform: translateX(50px); }
             to { opacity: 1; transform: translateX(0); }
         }
-
-        /* STYLING KALKULATOR KEK */
-        .kek-container { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; padding: 30px 0; }
-        @media(max-width: 768px) { .kek-container { grid-template-columns: 1fr; } }
-        .kek-card { background: white; padding: 30px; border-radius: var(--border-radius-sm); box-shadow: var(--shadow); border: 1px solid rgba(13, 148, 136, 0.15); }
-        .kek-card h3 { margin-bottom: 20px; color: var(--text-dark); font-size: 20px; border-bottom: 2px solid #f0fdfa; padding-bottom: 10px; }
-        .info-step { display: flex; gap: 15px; margin-bottom: 15px; align-items: flex-start; }
-        .info-step span { background: var(--bg-light); color: var(--button-tosca); font-weight: bold; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; border: 1px solid rgba(13, 148, 136, 0.3); }
-        .info-step p { font-size: 14.5px; color: var(--text-muted); line-height: 1.5; margin-top: 3px; }
 
         /* LMS WORKSPACE LAYOUT */
         .lms-layout { display: grid; grid-template-columns: 320px 1fr; gap: 25px; padding: 20px 0; }
@@ -132,7 +118,6 @@
             .hero-split { grid-template-columns: 1fr; text-align: center; padding: 20px 0; }
             .hero-left { align-items: center; }
             .feature-cards-wrapper { align-items: center; }
-            .feature-card:nth-child(n) { margin-left: 0; }
             .lms-layout { grid-template-columns: 1fr; }
             nav { padding: 20px; flex-direction: column; gap: 15px; }
         }
@@ -144,7 +129,6 @@
         <div class="logo">Her2Health</div>
         <div class="nav-links">
             <a id="menu-landing" class="active" onclick="showView('landing')">Beranda</a>
-            <a id="menu-kek" onclick="showView('kek')">Kalkulator KEK</a>
             <button class="btn" style="background:#e2e8f0; display:none; padding: 4px 10px; font-size:12px; color: #0f766e;" id="logout-admin-btn" onclick="logoutAdmin()">Keluar Admin</button>
         </div>
     </nav>
@@ -161,7 +145,7 @@
                 <div class="hero-left">
                     <span class="hero-badge">Her2Health</span>
                     <h1>Her to Health</h1>
-                    <p>adalah media edukasi digital yang mengajak perempuan untuk lebih sadar akan kesehatan diri melalui informasi yang mudah dipahami dan terpercaya, dengan fokus pada SADARI (Pemeriksaan Payudara Sendiri), pencegahan KEK, dan anemia.</p>
+                    <p>Merupakan media edukasi digital yang mengajak perempuan untuk lebih sadar akan kesehatan diri melalui informasi yang terpercaya, dengan fokus utama pada pemahaman dan panduan SADARI (Pemeriksaan Payudara Sendiri) sejak usia remaja.</p>
                     <button class="btn-start" onclick="showView('user-lms')">Mulai Sekarang</button>
                 </div>
                 <div class="hero-right">
@@ -169,73 +153,16 @@
                         <div class="feature-card">
                             <div class="card-icon">🩺</div>
                             <div class="card-content">
-                                <h4>Panduan SADARI</h4>
-                                <p>Deteksi dini kesehatan payudara secara mandiri langkah demi langkah.</p>
-                            </div>
-                        </div>
-                        <div class="feature-card">
-                            <div class="card-icon">⚖️</div>
-                            <div class="card-content">
-                                <h4>Kalkulator KEK</h4>
-                                <p>Pantau risiko Kekurangan Energi Kronis dengan pengukuran LILA.</p>
-                            </div>
-                        </div>
-                        <div class="feature-card">
-                            <div class="card-icon">🩸</div>
-                            <div class="card-content">
-                                <h4>Pencegahan Anemia</h4>
-                                <p>Edukasi mendalam dan pemantauan kadar Hemoglobin.</p>
+                                <h4>Panduan SADARI<br>(Pemeriksaan Payudara Sendiri)</h4>
+                                <p>Langkah deteksi dini untuk menjaga kesehatan payudara sejak usia remaja. Panduan interaktif ini dirancang untuk membantu Anda memahami anatomi tubuh, mengenali perubahan fisik secara dini, dan mempraktikkan rutinitas pemeriksaan yang benar demi kesehatan jangka panjang.</p>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- KALKULATOR KEK VIEW (BARU) -->
-        <div id="view-kek" class="view-section">
-            <div class="about-header"><h1 style="color: var(--text-dark); font-size: 36px; margin-bottom: 10px;">Kalkulator & Panduan KEK</h1><p style="color: var(--text-muted);">Deteksi Dini Risiko Kekurangan Energi Kronis (KEK) Berdasarkan Standar Kemenkes</p></div>
-            
-            <div class="kek-container">
-                <!-- Kartu Informasi & Cara Pengukuran -->
-                <div class="kek-card">
-                    <h3>📖 Cara Pengukuran LILA yang Benar</h3>
-                    <div class="info-step">
-                        <span>1</span>
-                        <p><b>Posisi Lengan:</b> Gunakan lengan kiri bagian atas (kecuali ada kelainan pada lengan kiri, gunakan lengan kanan). Lengan dalam keadaan bebas dan tidak tertutup pakaian tebal.</p>
-                    </div>
-                    <div class="info-step">
-                        <span>2</span>
-                        <p><b>Tentukan Titik Tengah:</b> Ukur jarak antara ujung tulang bahu (akromion) dan ujung siku (olekranon) menggunakan pita meteran, lalu tandai titik tengahnya.</p>
-                    </div>
-                    <div class="info-step">
-                        <span>3</span>
-                        <p><b>Lingkarkan Pita LILA:</b> Lingkarkan pita LILA pada titik tengah lengan yang sudah ditandai dengan pas (tidak terlalu ketat dan tidak terlalu longgar).</p>
-                    </div>
-                    <div class="info-step">
-                        <span>4</span>
-                        <p><b>Standar Ambang Batas:</b> Batas normal Lingkar Lengan Atas (LILA) wanita usia subur/ibu hamil adalah 23.5 cm. Jika kurang dari 23.5 cm, dikategorikan Berisiko KEK.</p>
-                    </div>
-                </div>
-
-                <!-- Kartu Kalkulator Interaktif -->
-                <div class="kek-card">
-                    <h3>🧮 Hitung Risiko KEK Anda</h3>
-                    <form onsubmit="hitungKek(event)">
-                        <div class="form-group">
-                            <label>Nama Responden / Ibu :</label>
-                            <input type="text" id="kek-nama" class="form-control" placeholder="Masukkan nama..." required>
-                        </div>
-                        <div class="form-group">
-                            <label>Hasil Pengukuran LILA (cm) :</label>
-                            <input type="number" step="0.1" id="kek-lila" class="form-control" placeholder="Contoh: 22.4" required>
-                        </div>
-                        <button type="submit" class="btn btn-tosca" style="width: 100%; margin-top: 10px; padding: 12px;">Cek Status Risiko KEK</button>
-                    </form>
                 </div>
             </div>
         </div>
         
+        <!-- LMS WORKSPACE VIEW -->
         <div id="view-user-lms" class="view-section">
             <div class="lms-layout">
                 <div class="sidebar">
@@ -246,6 +173,7 @@
             </div>
         </div>
 
+        <!-- ADMIN VIEW -->
         <div id="view-admin" class="view-section">
             <div class="main-content-card">
                 <h3 style="margin-bottom: 20px; color: var(--text-dark);">Manajemen Modul & Urutan Materi</h3>
@@ -272,11 +200,11 @@
                 <div id="adm-questions-preview"></div>
             </div>
             <div class="main-content-card">
-                <h3 style="color: var(--text-dark); margin-bottom: 10px;">📊 Hasil Rekapitulasi Karakteristik & Koreksi Jawaban User</h3>
+                <h3 style="color: var(--text-dark); margin-bottom: 10px;">📊 Hasil Rekapitulasi Pembelajaran & Evaluasi</h3>
                 <div style="overflow-x: auto;">
                     <table class="admin-table">
-                        <thead><tr><th>No</th><th>Nama Responden</th><th>Usia</th><th>Paritas</th><th>Tgl Melahirkan</th><th>Nifas Hari Ke</th><th>Nilai Pre-Test</th><th>Nilai Post-Test</th><th>Aksi</th></tr></thead>
-                        <tbody id="adm-recap-table-body"><tr><td colspan="9" style="text-align:center; color:var(--text-muted);">Belum ada data.</td></tr></tbody>
+                        <thead><tr><th>No</th><th>Nama Responden</th><th>Usia</th><th>Pendidikan</th><th>Nilai Pre-Test</th><th>Nilai Post-Test</th><th>Aksi</th></tr></thead>
+                        <tbody id="adm-recap-table-body"><tr><td colspan="7" style="text-align:center; color:var(--text-muted);">Belum ada data.</td></tr></tbody>
                     </table>
                 </div>
             </div>
@@ -290,15 +218,15 @@
 
     <script>
         const firebaseConfig = {
-  apiKey: "AIzaSyCWghPqthZFLxo2kp6W6cMY0humPu548Fg",
-  authDomain: "hthdatabase.firebaseapp.com",
-databaseURL: "https://hthdatabase-default-rtdb.asia-southeast1.firebasedatabase.app/",
-  projectId: "hthdatabase",
-  storageBucket: "hthdatabase.firebasestorage.app",
-  messagingSenderId: "1089199232562",
-  appId: "1:1089199232562:web:307e3d26911cd7bed60e2b",
-  measurementId: "G-R57MCNZBFH"
-};
+            apiKey: "AIzaSyCWghPqthZFLxo2kp6W6cMY0humPu548Fg",
+            authDomain: "hthdatabase.firebaseapp.com",
+            databaseURL: "https://hthdatabase-default-rtdb.asia-southeast1.firebasedatabase.app/",
+            projectId: "hthdatabase",
+            storageBucket: "hthdatabase.firebasestorage.app",
+            messagingSenderId: "1089199232562",
+            appId: "1:1089199232562:web:307e3d26911cd7bed60e2b",
+            measurementId: "G-R57MCNZBFH"
+        };
         
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
@@ -316,38 +244,12 @@ databaseURL: "https://hthdatabase-default-rtdb.asia-southeast1.firebasedatabase.
         let userBioSubmitted = false;
         let preTestDone = false;
         let preTestResults = '';
-        let currentBioData = { name: '', age: '', parity: '', deliveryDate: '', postpartumDay: '' };
+        
+        // Pembaruan Struktur Data Biodata (Nama, Usia, Pendidikan)
+        let currentBioData = { name: '', age: '', edu: '' };
 
         function showWarningAlert(msg) { Swal.fire({ icon: 'warning', title: 'Perhatian!', text: msg, confirmButtonColor: '#0d9488' }); }
         function showErrorAlert(msg) { Swal.fire({ icon: 'error', title: 'Akses Terkunci!', text: msg, confirmButtonColor: '#0d9488' }); }
-
-        // Fungsi Kalkulator KEK Menggunakan Standar LILA Kemenkes
-        function hitungKek(e) {
-            e.preventDefault();
-            let nama = document.getElementById('kek-nama').value;
-            let lila = parseFloat(document.getElementById('kek-lila').value);
-
-            if (isNaN(lila) || lila <= 0) {
-                showWarningAlert("Masukkan angka LILA yang valid!");
-                return;
-            }
-
-            if (lila < 23.5) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Hasil: Berisiko KEK (Kurang)',
-                    html: `Halo <b>${nama}</b>,<br>Nilai LILA Anda adalah <b>${lila} cm</b>.<br><br><span style="color: #ef4444; font-weight: bold;">Hasil menunjukkan < 23.5 cm (Berisiko KEK).</span><br>Disarankan untuk meningkatkan konsumsi makanan bergizi seimbang dan berkonsultasi dengan tenaga kesehatan terdekat.`,
-                    confirmButtonColor: '#0d9488'
-                });
-            } else {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Hasil: Normal (Tidak Berisiko KEK)',
-                    html: `Halo <b>${nama}</b>,<br>Nilai LILA Anda adalah <b>${lila} cm</b>.<br><br><span style="color: #0d9488; font-weight: bold;">Hasil menunjukkan ≥ 23.5 cm (Normal).</span><br>Pertahankan pola makan dan status gizi Anda dengan baik!`,
-                    confirmButtonColor: '#0d9488'
-                });
-            }
-        }
 
         db.ref('materi').on('value', (snapshot) => {
             materiDatabase = [];
@@ -383,9 +285,6 @@ databaseURL: "https://hthdatabase-default-rtdb.asia-southeast1.firebasedatabase.
             if(viewId === 'landing') {
                 document.getElementById('view-landing').classList.add('active');
                 document.getElementById('menu-landing').classList.add('active');
-            } else if(viewId === 'kek') {
-                document.getElementById('view-kek').classList.add('active');
-                document.getElementById('menu-kek').classList.add('active');
             } else if(viewId === 'user-lms') {
                 document.getElementById('view-user-lms').classList.add('active');
                 init();
@@ -491,15 +390,14 @@ databaseURL: "https://hthdatabase-default-rtdb.asia-southeast1.firebasedatabase.
             const displayCard = document.getElementById('user-main-content');
             if(!displayCard) return;
 
+            // Pembaruan UI Formulir Identitas Remaja
             if (!userBioSubmitted) {
                 displayCard.innerHTML = `
-                    <h2 style="margin-bottom:15px; font-size:20px;">Tahap 1: Formulir Identitas Ibu Nifas</h2>
+                    <h2 style="margin-bottom:15px; font-size:20px;">Tahap 1: Formulir Identitas</h2>
                     <form onsubmit="submitBioResponden(event)">
                         <div class="form-group"><label>Nama Lengkap :</label><input type="text" id="b-name" class="form-control" required></div>
                         <div class="form-group"><label>Usia (Tahun) :</label><input type="number" id="b-age" class="form-control" style="width:120px;" required></div>
-                        <div class="form-group"><label>Paritas (Jumlah Persalinan) :</label><input type="text" id="b-parity" placeholder="Misal: P1A0" class="form-control" required></div>
-                        <div class="form-group"><label>Tanggal Melahirkan :</label><input type="date" id="b-date" class="form-control" required></div>
-                        <div class="form-group"><label>Nifas Hari Ke :</label><input type="number" id="b-day" class="form-control" style="width:120px;" required></div>
+                        <div class="form-group"><label>Pendidikan :</label><input type="text" id="b-edu" placeholder="Contoh: SMA / SMK" class="form-control" required></div>
                         <button type="submit" class="btn btn-tosca" style="margin-top:15px;">Lanjut ke Pre-Test</button>
                     </form>`;
                 return;
@@ -543,13 +441,12 @@ databaseURL: "https://hthdatabase-default-rtdb.asia-southeast1.firebasedatabase.
         }
 
         function goToNextMateriAlur() { if (currentActiveMenuIndex < materiDatabase.length) userNavigateTo(currentActiveMenuIndex + 1); }
+        
         function submitBioResponden(e) { 
             e.preventDefault(); 
             currentBioData.name = document.getElementById('b-name').value; 
             currentBioData.age = document.getElementById('b-age').value; 
-            currentBioData.parity = document.getElementById('b-parity').value; 
-            currentBioData.deliveryDate = document.getElementById('b-date').value; 
-            currentBioData.postpartumDay = document.getElementById('b-day').value; 
+            currentBioData.edu = document.getElementById('b-edu').value; 
             userBioSubmitted = true; 
             loadActiveMenuContent(); 
             renderUserSidebarMenu(); 
@@ -701,11 +598,11 @@ databaseURL: "https://hthdatabase-default-rtdb.asia-southeast1.firebasedatabase.
         }
         function renderAdminRecapTable() {
             const tb = document.getElementById('adm-recap-table-body'); if(!tb) return; tb.innerHTML = '';
-            if(rekapRespondenDatabase.length===0) { tb.innerHTML = `<tr><td colspan="9" style="text-align:center; color:var(--text-muted);">Belum ada data responden terkumpul.</td></tr>`; return; }
+            if(rekapRespondenDatabase.length===0) { tb.innerHTML = `<tr><td colspan="7" style="text-align:center; color:var(--text-muted);">Belum ada data responden terkumpul.</td></tr>`; return; }
             rekapRespondenDatabase.forEach((d, i) => { 
                 let preVal = d.preScore !== undefined ? `<b>Skor: ${d.preScore}</b><br><span style="font-size:11px; color:#666;">${d.preTest}</span>` : (d.preTest || '-');
                 let postVal = d.postScore !== undefined ? `<b>Skor: ${d.postScore}</b><br><span style="font-size:11px; color:#666;">${d.postTest}</span>` : (d.postTest || '-');
-                tb.innerHTML += `<tr><td>${i+1}</td><td><b>${d.bio.name}</b></td><td>${d.bio.age} Thn</td><td>${d.bio.parity}</td><td>${d.bio.deliveryDate}</td><td>Hari ${d.bio.postpartumDay}</td><td style="font-size:12px;">${preVal}</td><td style="font-size:12px;">${postVal}</td><td><button class="btn btn-danger" style="padding:4px 8px; font-size:12px;" onclick="deleteResponden(${i})">Hapus</button></td></tr>`; 
+                tb.innerHTML += `<tr><td>${i+1}</td><td><b>${d.bio.name}</b></td><td>${d.bio.age} Thn</td><td>${d.bio.edu}</td><td style="font-size:12px;">${preVal}</td><td style="font-size:12px;">${postVal}</td><td><button class="btn btn-danger" style="padding:4px 8px; font-size:12px;" onclick="deleteResponden(${i})">Hapus</button></td></tr>`; 
             });
         }
         
