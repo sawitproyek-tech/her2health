@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Her2Health - Her to Health</title>
-    <!-- Tambahkan baris ini untuk memanggil favicon -->
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
@@ -70,14 +69,18 @@
         .btn-start:hover { background-color: var(--button-hover); transform: translateY(-3px); box-shadow: 0 12px 25px rgba(13, 148, 136, 0.5); }
         .hero-right { display: flex; justify-content: center; position: relative; z-index: 2; }
 
-        /* Feature Card View */
-        .feature-cards-wrapper { display: flex; flex-direction: column; gap: 15px; width: 100%; max-width: 460px; }
-        .feature-card { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(10px); border: 1px solid rgba(13, 148, 136, 0.2); border-radius: 16px; padding: 35px 25px; display: flex; align-items: flex-start; gap: 20px; box-shadow: 0 10px 25px rgba(13, 148, 136, 0.1); transition: transform 0.3s; animation: slideInRight 0.8s ease-out backwards; cursor: default; border-left: 6px solid var(--button-tosca); }
+        /* Feature Card View - Dikembalikan dengan efek bertingkat */
+        .feature-cards-wrapper { display: flex; flex-direction: column; gap: 15px; width: 100%; max-width: 480px; }
+        .feature-card { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(10px); border: 1px solid rgba(13, 148, 136, 0.2); border-radius: 16px; padding: 25px; display: flex; align-items: flex-start; gap: 20px; box-shadow: 0 10px 25px rgba(13, 148, 136, 0.1); transition: transform 0.3s; animation: slideInRight 0.8s ease-out backwards; cursor: default; border-left: 6px solid; }
         .feature-card:hover { transform: translateX(-10px); background: #ffffff; }
         
-        .card-icon { font-size: 34px; background: var(--bg-light); width: 75px; height: 75px; display: flex; align-items: center; justify-content: center; border-radius: 16px; flex-shrink: 0; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); }
-        .card-content h4 { color: var(--text-dark); margin: 0 0 12px 0; font-size: 19px; font-weight: 700; line-height: 1.3;}
-        .card-content p { color: var(--text-muted); font-size: 14.5px; line-height: 1.6; margin: 0; text-align: justify; }
+        .feature-card:nth-child(1) { animation-delay: 0.1s; border-left-color: var(--button-tosca); }
+        .feature-card:nth-child(2) { animation-delay: 0.3s; border-left-color: #f59e0b; margin-left: -20px; }
+        .feature-card:nth-child(3) { animation-delay: 0.5s; border-left-color: #ef4444; margin-left: -40px; }
+        
+        .card-icon { font-size: 30px; background: var(--bg-light); width: 65px; height: 65px; display: flex; align-items: center; justify-content: center; border-radius: 14px; flex-shrink: 0; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); }
+        .card-content h4 { color: var(--text-dark); margin: 0 0 8px 0; font-size: 17px; font-weight: 700; line-height: 1.3;}
+        .card-content p { color: var(--text-muted); font-size: 14px; line-height: 1.5; margin: 0; text-align: justify; }
         
         @keyframes slideInRight {
             from { opacity: 0; transform: translateX(50px); }
@@ -120,6 +123,7 @@
             .hero-split { grid-template-columns: 1fr; text-align: center; padding: 20px 0; }
             .hero-left { align-items: center; }
             .feature-cards-wrapper { align-items: center; }
+            .feature-card:nth-child(n) { margin-left: 0; }
             .lms-layout { grid-template-columns: 1fr; }
             nav { padding: 20px; flex-direction: column; gap: 15px; }
         }
@@ -156,7 +160,21 @@
                             <div class="card-icon">🩺</div>
                             <div class="card-content">
                                 <h4>Panduan SADARI<br>(Pemeriksaan Payudara Sendiri)</h4>
-                                <p>Langkah deteksi dini untuk menjaga kesehatan payudara sejak usia remaja. Panduan interaktif ini dirancang untuk membantu Anda memahami anatomi tubuh, mengenali perubahan fisik secara dini, dan mempraktikkan rutinitas pemeriksaan yang benar demi kesehatan jangka panjang.</p>
+                                <p>Langkah deteksi dini menjaga kesehatan payudara sejak remaja. Panduan interaktif ini membantu Anda mengenali perubahan fisik secara dini dan mempraktikkan pemeriksaan yang benar.</p>
+                            </div>
+                        </div>
+                        <div class="feature-card">
+                            <div class="card-icon">⚖️</div>
+                            <div class="card-content">
+                                <h4>Pencegahan KEK</h4>
+                                <p>Pantau status gizi dan cegah risiko Kekurangan Energi Kronis untuk memastikan kesehatan tubuh dan nutrisi yang selalu optimal.</p>
+                            </div>
+                        </div>
+                        <div class="feature-card">
+                            <div class="card-icon">🩸</div>
+                            <div class="card-content">
+                                <h4>Pencegahan Anemia</h4>
+                                <p>Edukasi mendalam tentang pentingnya menjaga kadar Hemoglobin dan asupan zat besi bagi aktivitas remaja putri.</p>
                             </div>
                         </div>
                     </div>
@@ -179,7 +197,15 @@
         <div id="view-admin" class="view-section">
             <div class="main-content-card">
                 <h3 style="margin-bottom: 20px; color: var(--text-dark);">Manajemen Modul & Urutan Materi</h3>
-                <form onsubmit="adminSaveData(event)" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; align-items: end;">
+                <form onsubmit="adminSaveData(event)" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; align-items: end;">
+                    <div class="form-group">
+                        <label>Klaster</label>
+                        <select id="adm-cluster" class="form-control">
+                            <option value="SADARI">SADARI</option>
+                            <option value="KEK">KEK</option>
+                            <option value="Anemia">Anemia</option>
+                        </select>
+                    </div>
                     <div class="form-group"><label>Judul Modul</label><input type="text" id="adm-title" class="form-control" required></div>
                     <div class="form-group"><label>Jenis Konten</label><select id="adm-type" class="form-control"><option value="pdf">File Dokumen PDF</option><option value="video">Video (Google Drive Embed)</option></select></div>
                     <div class="form-group"><label>Link Embed URL</label><input type="url" id="adm-url" class="form-control" required></div>
@@ -219,7 +245,7 @@
     </footer>
 
     <script>
-        const firebaseConfig = {
+ const firebaseConfig = {
             apiKey: "AIzaSyCWghPqthZFLxo2kp6W6cMY0humPu548Fg",
             authDomain: "hthdatabase.firebaseapp.com",
             databaseURL: "https://hthdatabase-default-rtdb.asia-southeast1.firebasedatabase.app/",
@@ -247,7 +273,6 @@
         let preTestDone = false;
         let preTestResults = '';
         
-        // Pembaruan Struktur Data Biodata (Nama, Usia, Pendidikan)
         let currentBioData = { name: '', age: '', edu: '' };
 
         function showWarningAlert(msg) { Swal.fire({ icon: 'warning', title: 'Perhatian!', text: msg, confirmButtonColor: '#0d9488' }); }
@@ -337,7 +362,16 @@
             let step1Active = (!preTestDone) ? 'active' : '';
             container.innerHTML += `<div class="sidebar-item ${step1Active}"><span><b>1. Biodata & Pre-Test</b></span><span>${step1Status}</span></div>`;
 
+            let currentCluster = '';
+
             materiDatabase.forEach((mod, idx) => {
+                let modCluster = mod.cluster || 'UMUM';
+                
+                if (modCluster !== currentCluster) {
+                    container.innerHTML += `<div style="padding: 15px 16px 5px 16px; font-size: 12px; font-weight: 800; color: #0f766e; text-transform: uppercase; letter-spacing: 0.5px;">📂 KLASTER: ${modCluster}</div>`;
+                    currentCluster = modCluster;
+                }
+
                 let isCleared = materiClearedStatus[idx] ? '✅' : '📖';
                 let activeClass = (preTestDone && idx === currentActiveMenuIndex) ? 'active' : '';
                 let isUnlocked = preTestDone && (idx === 0 || materiClearedStatus[idx - 1] === true);
@@ -351,7 +385,7 @@
             let activeClassQuiz = (preTestDone && currentActiveMenuIndex === postTestIdx) ? 'active' : '';
             let lockedQuiz = (allMateriRead) ? '' : 'locked';
             
-            container.innerHTML += `<div class="sidebar-item ${activeClassQuiz} ${lockedQuiz}" onclick="${allMateriRead ? `userNavigateTo(${postTestIdx})` : `showErrorAlert('Selesaikan membaca seluruh materi terlebih dahulu.')`}"><span><b>3. Post-Test Akhir</b></span><span>${allMateriRead ? '📝' : '🔒'}</span></div>`;
+            container.innerHTML += `<div style="margin-top:15px;" class="sidebar-item ${activeClassQuiz} ${lockedQuiz}" onclick="${allMateriRead ? `userNavigateTo(${postTestIdx})` : `showErrorAlert('Selesaikan membaca seluruh materi terlebih dahulu.')`}"><span><b>3. Post-Test Akhir</b></span><span>${allMateriRead ? '📝' : '🔒'}</span></div>`;
         }
 
         function userNavigateTo(targetIdx) {
@@ -392,7 +426,6 @@
             const displayCard = document.getElementById('user-main-content');
             if(!displayCard) return;
 
-            // Pembaruan UI Formulir Identitas Remaja
             if (!userBioSubmitted) {
                 displayCard.innerHTML = `
                     <h2 style="margin-bottom:15px; font-size:20px;">Tahap 1: Formulir Identitas</h2>
@@ -519,8 +552,12 @@
         function adminSaveData(e) { 
             e.preventDefault(); 
             db.ref('materi').push({
-                id: Date.now(), title: document.getElementById('adm-title').value, type: document.getElementById('adm-type').value,
-                url: document.getElementById('adm-url').value, duration: parseFloat(document.getElementById('adm-duration').value) || 1
+                id: Date.now(), 
+                cluster: document.getElementById('adm-cluster').value,
+                title: document.getElementById('adm-title').value, 
+                type: document.getElementById('adm-type').value,
+                url: document.getElementById('adm-url').value, 
+                duration: parseFloat(document.getElementById('adm-duration').value) || 1
             });
             document.getElementById('adm-title').value = ''; document.getElementById('adm-url').value = ''; 
             Swal.fire({ icon: 'success', title: 'Berhasil!', text: 'Materi berhasil disimpan permanen di Cloud!', confirmButtonColor: '#0d9488' });
@@ -592,8 +629,12 @@
 
         function renderAdminListTable() {
             const tb = document.getElementById('adm-list-preview'); if(!tb) return; tb.innerHTML = '';
-            materiDatabase.forEach((m, i) => { tb.innerHTML += `<tr><td>${i+1}</td><td><b>${m.title}</b></td><td>${m.type.toUpperCase()}</td><td>${m.duration} Menit</td><td><button class="btn btn-danger" style="padding:4px 8px; font-size:12px;" onclick="deleteMateri(${i})">Hapus</button></td></tr>`; });
+            materiDatabase.forEach((m, i) => { 
+                let badge = `<span style="background:#ccfbf1; color:#0f766e; padding:2px 8px; border-radius:12px; font-size:11px; font-weight:700; margin-bottom:4px; display:inline-block;">${m.cluster || 'UMUM'}</span>`;
+                tb.innerHTML += `<tr><td>${i+1}</td><td>${badge}<br><b>${m.title}</b></td><td>${m.type.toUpperCase()}</td><td>${m.duration} Menit</td><td><button class="btn btn-danger" style="padding:4px 8px; font-size:12px;" onclick="deleteMateri(${i})">Hapus</button></td></tr>`; 
+            });
         }
+
         function renderAdminQuestions() {
             const ar = document.getElementById('adm-questions-preview'); if(!ar) return; ar.innerHTML = '';
             kuesionerDatabase.forEach((q, i) => { ar.innerHTML += `<div style="padding:10px; background:#f8fafc; border:1px solid #e2e8f0; margin-bottom:8px; border-radius:6px; display:flex; justify-content:space-between; align-items:center;"><div><b>${i+1}. ${q.question}</b><br><small>Opsi: ${q.options.join(', ')}</small><br><small style="color:var(--primary-color); font-weight:600;">🔑 Kunci: ${q.key}</small></div><button class="btn btn-danger" style="padding:4px 8px; font-size:12px;" onclick="deleteQuestion(${i})">Hapus</button></div>`; });
